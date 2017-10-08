@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once 'connect.inc.php';
+include_once '../includes/connect.inc.php';
 if (!isset($_POST['submit'])) {
 	header("Location: ../register.php");
 	exit();
@@ -15,6 +15,7 @@ if (!isset($_POST['submit'])) {
 		header("Location: ../register.php?status=empty");
 		exit();
 	} else {
+		//check to see if user exists
 		$query = "SELECT * FROM users WHERE user_email = ?";
 		$stmt = $conn->prepare($query);
 		$stmt->bind_param("s", $email);
@@ -27,6 +28,7 @@ if (!isset($_POST['submit'])) {
 			header("Location: ../register.php?status=user_exists");
 			exit();
 		} else {
+			// add new user to db
 			$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 			$query = "INSERT INTO users (user_first_name, user_last_name, user_email, user_password) VALUES (?,?,?,?);";
 			$stmt = $conn->prepare($query);

@@ -1,16 +1,26 @@
 #fixtures {
 	float: left;
 	width: 45%;
-	border-color: black; 
+	border-color: black;
 	border-style: solid;
 	border-width: medium;
-	
+
 }
 
 #teams {
 	float: right;
 	width: 45%;
-	border-color: black; 
+	border-color: black;
 	border-style: solid;
 	border-width: medium;
+}
+
+label {
+	display: inline-block;
+	width: 150px;
+}
+
+.heading {
+	font-weight:bolder;
+	font-size: 20px;
 }

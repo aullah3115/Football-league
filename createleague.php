@@ -1,9 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['logged'])){
-  header('Location: index.php');
-  exit();
-}
+include 'includes/checklog.inc.php';
+
  ?>
 <!DOCTYPE>
 <html>
@@ -11,10 +9,17 @@ if (!isset($_SESSION['logged'])){
   <title>Create New League</title>
 </head>
 <body>
-  <form method="post" action="includes/createleague.inc.php">
-    <input type="text" name="name" placeholder="Enter league name">
-    <input type="number" name="number" placeholder="Enter number of teams" min="2" max="50">
+  <form method="post" action="scripts/createleague.s.php">
+    <input type="text" name="name" placeholder="Enter league name"><br/>
+    <input type="text" name="weeks" placeholder="Number of weeks"><br/>
+    <input type="text" name="rounds" placeholder="Number of rounds per week"><br/>
     <input type="submit" name="create" value="Create League">
+  </form>
+
+
+
+  <form method="post" action="includes/logout.inc.php">
+    <input type=submit name="logout" value="Log out">
   </form>
 </body>
 </html>

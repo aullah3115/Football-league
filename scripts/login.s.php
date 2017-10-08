@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-include_once 'connect.inc.php';
+include_once '../includes/connect.inc.php';
 
 if (!isset($_POST['submit'])) {
 	header("Location: ../login.php");
 	exit();
-} else {
+}
 
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
@@ -44,5 +44,5 @@ if (password_verify($password, $storedPassword)){
 	exit();
 }
 
-}
+
 ?>

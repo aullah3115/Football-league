@@ -8,26 +8,25 @@ if (!isset($_POST['create'])) {
   header('Location: ../dashboard.php');
   exit();
 }
-include 'connect.inc.php';
+include '../includes/connect.inc.php';
 
+//variables
+
+$user_id=(int)$_SESSION['id'];
 $name = mysqli_real_escape_string($conn, $_POST['name']);
-$num = (int)$_POST['number'];
+$weeks = (int)mysqli_real_escape_string($conn, $_POST['weeks']);
+$rounds = (int)mysqli_real_escape_string($conn, $_POST['rounds']);
 
-if (empty($name) || empty($num)) {
+if (empty($name) || empty($weeks) || empty($rounds)) {
   header('Location: ../createleague.php?status=empty');
   exit();
 }
 
-if (!is_int($num)) {
-  header('Location: ../createleague.php?status=non_int');
-  exit();
-}
+// check to see if league already exists
 
-$user_id=(int)$_SESSION['id'];
-
-$query = "SELECT * FROM leagues WHERE user_id = ? AND league_name = ?;";
+$query = "SELECT * FROM leagues WHERE user_id = '". $user_id ."' AND league_name = ?;";
 $stmt = $conn->prepare($query);
-$stmt->bind_param('is', $user_id, $name);
+$stmt->bind_param('s', $name);
 $stmt->execute();
 $result = $stmt->get_result();
 $num_rows = $result->num_rows;
@@ -38,24 +37,29 @@ if($num_rows > 0){
   exit();
 }
 
-$query = "INSERT INTO leagues (league_name, league_year, user_id) VALUES (?, YEAR(CURDATE()), ?);";
+// enter league details into leagues table
+
+$query = "INSERT INTO leagues (league_name, league_year, league_weeks, league_rounds, user_id) VALUES (?, YEAR(CURDATE()), ?,  ?, ?);";
 $stmt = $conn->prepare($query);
-$stmt->bind_param('si', $name, $user_id);
+$stmt->bind_param('siii', $name, $weeks, $rounds, $user_id);
 $stmt->execute();
 $stmt->close();
+
+// get and store league id and name as session variables
 
 $query = "SELECT * FROM leagues WHERE user_id = ? AND league_name = ?;";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('is', $user_id, $name);
 $stmt->execute();
 $result = $stmt->get_result();
-
 $row = $result->fetch_assoc();
 
 $_SESSION['league_id'] = $row['league_id'];
 $_SESSION['league_name'] = $name;
-$_SESSION['num_teams'] = $num;
-header('Location: ../add_teams.php');
+
+// go to next stage of adding teams
+
+header('Location: ../editteams.php');
 exit();
 
 

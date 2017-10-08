@@ -11,7 +11,7 @@ if(isset($_SESSION['logged'])){
 </head>
 <body>
 	<div>
-<form method="post" action="includes/login.inc.php">
+<form method="post" action="scripts/login.s.php">
 	<input type="text" name="email" placeholder="E-mail">
 	<input type="text" name="password" placeholder="Password">
 	<input type="submit" name="submit" value="Log in">

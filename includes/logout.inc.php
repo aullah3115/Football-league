@@ -1,8 +1,7 @@
 <?php
-if (!isset($_POST)) {
-  header('Location: ../index.php');
-}
 session_start();
+if(isset($_POST)){
 $_SESSION = array();
-header('Location: ../index.php');
- ?>
+header('Location: \Football\index.php');
+}
+?>

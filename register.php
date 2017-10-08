@@ -6,7 +6,7 @@
 </head>
 <body>
 	<div>
-<form method="post" action="includes/add_user.inc.php">
+<form method="post" action="scripts/adduser.s.php">
 	<input type="text" name="first" placeholder="First Name">
 	<input type="text" name="last" placeholder="Last Name">
 	<input type="text" name="email" placeholder="E-mail">
