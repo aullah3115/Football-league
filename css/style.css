@@ -1,0 +1,16 @@
+#fixtures {
+	float: left;
+	width: 45%;
+	border-color: black; 
+	border-style: solid;
+	border-width: medium;
+	
+}
+
+#teams {
+	float: right;
+	width: 45%;
+	border-color: black; 
+	border-style: solid;
+	border-width: medium;
+}
