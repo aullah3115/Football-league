@@ -11,6 +11,7 @@ include 'includes/connect.inc.php';
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
+  <h1>My Leagues</h1>
   <form method="post" action="includes/logout.inc.php">
     <input type=submit name="logout" value="Log out">
   </form>
@@ -24,7 +25,7 @@ foreach($_SESSION as $k => $v){
 ?>
 
 <form method="post" action="dashboard.php">
-  <input type=submit name="submit" value="Add another league">
+  <input type=submit name="submit" value="Go Back">
 </form><br/>
 
 <form method="post" action="scripts/openleague.s.php">

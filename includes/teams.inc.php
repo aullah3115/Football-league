@@ -13,12 +13,14 @@ $team = mysqli_real_escape_string($conn, $_POST['team']);
 if(!empty($team)){
 
 
-$query = "SELECT * FROM teams WHERE team_name = ? AND league_id = ". $_SESSION['league_id'];
+$query = "SELECT team_name, league_id, FROM teams WHERE team_name = ? AND league_id = ". $_SESSION['league_id'];
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $team);
 $stmt->execute();
-$result = $stmt->get_result();
-$num_of_rows = $result->num_rows;
+$stmt->store_result();
+//$result = $stmt->get_result();
+//$num_of_rows = $result->num_rows;
+$num_of_rows = $stmt->num_rows;
 $stmt->close();
 
 

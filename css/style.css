@@ -1,3 +1,9 @@
+body {
+  margin: 0 auto;
+  max-width: 50em;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+
 #fixtures {
 	float: left;
 	width: 45%;
@@ -23,4 +29,32 @@ label {
 .heading {
 	font-weight:bolder;
 	font-size: 20px;
+}
+
+.fixture {
+	width: 300px;
+}
+
+div .team {
+	display: inline-block;
+	width: 40%;
+  vertical-align: top;
+
+}
+
+div .container {
+	vertical-align:top;
+}
+select {
+	width: 200px;
+}
+
+input {
+	width: 200px;
+	height: 25px;
+	margin: 10px;
+}
+
+th {
+  width: 200px;
 }

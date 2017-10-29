@@ -2,8 +2,9 @@
 session_start();
 include '../includes/connect.inc.php';
 include '../includes/checklog.inc.php';
+
 if (!isset($_POST)){
-  header('Location ../addteams.php?status=unsubmitted');
+  header('Location ../dashboard.php');
   exit();
 }
 $league = (int)$_SESSION['league_id'];
@@ -13,12 +14,14 @@ $team = array_search('delete', $_POST);
 
 if(isset($_POST[$team])){
 $team = base64_decode($team);
-$team = mysqli_real_escape_string($conn, $team);
+//$team = mysqli_real_escape_string($conn, $team);
 
+$query = "UPDATE teams SET status = 'deleted' WHERE league_id =" . $league . " AND team_name ='". $team ."';";
+//$query = "DELETE FROM teams WHERE league_id =" . $league . " AND team_name ='". $team ."';";
+$result = $conn->query($query);
+//$error = $conn->error;
 
-$query = "DELETE FROM teams WHERE league_id ='" . $league . "' AND team_name ='". $team ."';";
-$conn->query($query);
-
+//$_SESSION['x']=$error;
 //count no of teams in league
 $query = "SELECT COUNT(*) AS no_of_teams FROM teams WHERE league_id ='". $league ."';";
 $result = $conn->query($query);
@@ -49,6 +52,7 @@ header('Location: ../editteams.php?status=removed');
 exit();
 }
 
+//if team name was changed, this stores the change
 $oldteam = array_search('change', $_POST);
 $oldteam = base64_decode($oldteam);
 
@@ -68,15 +72,15 @@ if (empty($newteam)){
   header('Location: ../editteams.php?status=empty');
   exit();
 }
-$league = (int)$_SESSION['league_id'];
+
 $query = "SELECT * FROM teams WHERE team_name = ? AND league_id ='" . $league . "';";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $newteam);
 $stmt->execute();
-$result = $stmt->get_result();
-
-
-$num_of_rows = $result->num_rows;
+$stmt->store_result();
+//$result = $stmt->get_result();
+$num_of_rows = $stmt->num_rows;
+//$num_of_rows = $result->num_rows;
 $stmt->close();
 
 if ($num_of_rows > 0){
@@ -89,10 +93,6 @@ $stmt->bind_param("s", $newteam);
 $stmt->execute();
 $stmt->close();
 
-
-
 header('Location: ../editteams.php?status=changed');
 exit();
-?>
-
 ?>

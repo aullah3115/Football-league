@@ -24,13 +24,14 @@ if (empty($team)){
 
 // see if the team exists
 
-$query = "SELECT * FROM teams WHERE team_name = ? AND league_id ='" . $league . "';";
+$query = "SELECT * FROM teams WHERE team_name = ? AND status <> 'deleted' AND league_id ='" . $league . "';";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $team);
 $stmt->execute();
-$result = $stmt->get_result();
-
-$num_of_rows = $result->num_rows;
+$stmt->store_result();
+$num_of_rows = $stmt->num_rows;
+//$result = $stmt->get_result();
+//$num_of_rows = $result->num_rows;
 $stmt->close();
 
 // if it exists go back
@@ -50,7 +51,7 @@ if($num_rows>0){
 }
 */
 //add the team to the league
-$query = "INSERT INTO teams (team_name, league_id) VALUES (?, '". $league ."');";
+$query = "INSERT INTO teams (team_name, league_id, status) VALUES (?, '". $league ."', 'added');";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $team);
 $stmt->execute();

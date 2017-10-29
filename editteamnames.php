@@ -27,17 +27,12 @@ if(isset($_SESSION['dummy']))
     <input type=submit name="logout" value="Log out">
   </form><br/>
 
-<?php if($no_of_teams<7){
-echo '<form method="post" action="scripts/addteam.s.php">';
-echo  '<input type=text name="team" placeholder="Enter Team Name">';
-echo  '<input type="submit" name="addteam" value="Add Team">';
-echo '</form><br/>';
-} else {echo 'maximum number of teams limit reached';}
-?>
 
-<form method=post action="scripts/deleteteam.s.php">
+
+
+<form method=post action="scripts/editteamname.s.php">
 <?php
-$query = "SELECT * FROM teams WHERE league_id=" . $_SESSION['league_id'] . " AND status <> 'deleted';";
+$query = "SELECT * FROM teams WHERE league_id=" . $_SESSION['league_id'];
 $result = $conn->query($query);
   while($row = $result->fetch_assoc()){
     $team = $row['team_name'];
@@ -45,17 +40,13 @@ $result = $conn->query($query);
 
     echo '<input type="text" name="'.$row['team_id'].'" placeholder="'. $team .'">';
 
-    echo '<input type="submit" name="' . $encode_team . '" value="change">';
-    echo '<input type="submit" name="' . $encode_team . '" value="delete"><br/>';
+    echo '<input type="submit" name="' . $encode_team . '" value="change"><br/>';
 }
 ?>
 </form>
 <br/>
-<form method="post" action="scripts/undoteamchanges.s.php">
+<form method="post" action="leaguedashboard.php">
   <input type=submit name="submit" value="Go Back">
-</form>
-<form method="post" action="scripts/generatefixtures.s.php">
-  <input type=submit name="submit" value="Confirm">
 </form>
 
 <p><?php echo 'Logged in:' . $_SESSION['logged'];?></p>

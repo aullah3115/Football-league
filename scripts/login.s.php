@@ -16,12 +16,17 @@ if(empty($email) || empty($password)){
 	exit();
 }
 
-$query = "SELECT * FROM users WHERE user_email = ?";
+$query = "SELECT user_id, user_first_name, user_last_name, user_email, user_password
+					FROM users WHERE user_email = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$result = $stmt->get_result();
-$num_of_rows = $result->num_rows;
+$stmt->store_result();
+$stmt->bind_result($user_id, $user_first_name, $user_last_name, $user_email, $user_password);
+$stmt->fetch();
+$num_of_rows = $stmt->num_rows;
+//$result = $stmt->get_result();
+//$num_of_rows = $result->num_rows;
 //$stmt->close();
 
 if ($num_of_rows < 1) {
@@ -29,14 +34,14 @@ if ($num_of_rows < 1) {
 	exit();
 }
 
-$row = $result->fetch_assoc();
-$storedPassword = $row['user_password'];
+//$row = $result->fetch_assoc();
+$storedPassword = $user_password;
 
 if (password_verify($password, $storedPassword)){
   $_SESSION['logged'] = true;
-  $_SESSION['name'] = $row['user_first_name'] . ' ' . $row['user_last_name'];
-  $_SESSION['id'] = $row['user_id'];
-  $_SESSION['email'] = $row['user_email'];
+  $_SESSION['name'] = $user_first_name . ' ' . $user_last_name;
+  $_SESSION['id'] = $user_id;
+  $_SESSION['email'] = $user_email;
   header("Location: ../dashboard.php");
 	exit();
 } else {

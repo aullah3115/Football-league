@@ -17,6 +17,7 @@ $result = $conn->query($query);
 <html>
 <head>
 </head>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 <body>
 <h1><?php echo $_SESSION['league_name'];?></h1>
 
@@ -27,16 +28,52 @@ $result = $conn->query($query);
 <form method="post" action="leagues.php">
   <input type="submit" name="changeleague" value="Choose a different League">
 </form>
-
+<hr>
 <form method="post" action="editteams.php">
   <input type="submit" name="editteams" value="Add/Delete Teams">
 </form>
-<h4>Teams</h4>
+
+<form method="post" action="editteamnames.php">
+  <input type="submit" name="editteams" value="Change Team Names">
+</form>
+<hr>
+<!--
+<form method="post" action="teams.php">
+  <input type="submit" name="viewteams" value="View Teams">
+</form>
+-->
+<form method="post" action="fixtures.php">
+  <input type="submit" name="viewfixture" value="View Fixtures">
+</form>
+
+<form method="post" action="standings.php">
+  <input type="submit" name="viewtable" value="View League table">
+</form>
+
+<h4>TEAMS</h4>
+<!--
+<form>
 <?php
+/*
 while($row = $result->fetch_assoc()){
   $team = $row['team_name'];
   echo '<label>'. $team . '</label><br/>';
 }
+*/
 ?>
+</form>
+-->
+<form method="post" action="teamdashboard.php">
+<?php
+while($row = $result->fetch_assoc()){
+  $team = $row['team_name'];
+  echo '<label>'. $team . '</label>';
+
+  $encode_team = base64_encode($team);
+  echo '<input type="submit" name="' . $encode_team . '" value="View Team"><br/>';
+  //echo '<input type="submit" name="' . $encode_team . '" value="Delete"><br/>';
+}
+?>
+</form>
 </body>
 </html

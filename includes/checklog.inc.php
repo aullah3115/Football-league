@@ -1,6 +1,6 @@
 <?php
 if (!isset($_SESSION['logged'])){
-  header('Location: \Football\index.php');
+  header('Location: index.php');
   exit();
 }
 ?>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once '../includes/connect.inc.php';
+include '../includes/password.inc.php';
 if (!isset($_POST['submit'])) {
 	header("Location: ../register.php");
 	exit();
@@ -16,12 +17,14 @@ if (!isset($_POST['submit'])) {
 		exit();
 	} else {
 		//check to see if user exists
-		$query = "SELECT * FROM users WHERE user_email = ?";
+		$query = "SELECT user_email FROM users WHERE user_email = ?";
 		$stmt = $conn->prepare($query);
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		$result = $stmt->get_result();
-		$num_of_rows = $result->num_rows;
+		$stmt->store_result();
+		$num_of_rows = $stmt->num_rows;
+		//$result = $stmt->get_result();
+		//$num_of_rows = $result->num_rows;
 		$stmt->close();
 
 		if ($num_of_rows > 0){
@@ -38,18 +41,21 @@ if (!isset($_POST['submit'])) {
 
 			//get user details from database
 
-			$query = "SELECT * FROM users WHERE user_email = ?;";
+			$query = "SELECT user_id, user_first_name, user_last_name, user_email
+								FROM users WHERE user_email = ?;";
 			$stmt = $conn->prepare($query);
 			$stmt->bind_param("s", $email);
 			$stmt->execute();
-			$result = $stmt->get_result();
+			$stmt->bind_result($user_id, $user_first_name, $user_last_name, $user_email);
+			$stmt->fetch();
+			//$result = $stmt->get_result();
 
-			$row = $result->fetch_assoc();
+			//$row = $result->fetch_assoc();
 
 			$_SESSION['logged'] = true;
-			$_SESSION['name'] = $row['user_first_name'] . ' ' . $row['user_last_name'];
-			$_SESSION['id'] = $row['user_id'];
-			$_SESSION['email'] = $row['user_email'];
+			$_SESSION['name'] = $user_first_name . ' ' . $user_last_name;
+			$_SESSION['id'] = $user_id;
+			$_SESSION['email'] = $user_email;
 
 			header("Location: ../dashboard.php");
 			exit();

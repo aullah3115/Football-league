@@ -5,12 +5,12 @@ if (!isset($_POST['teams'])) {
 	$teams = 2;
 } else {
 	$teams = (int)$_POST['teams'];
-	
+
 }
 
 	$dummy = false;
 
-// this stores the teams in an array 
+// this stores the teams in an array
 if (!isset($_POST['teamName'])) {
 	$teamList = array();
 } else {
@@ -19,12 +19,12 @@ if (!isset($_POST['teamName'])) {
 	if ($teams % 2 == 1){
 	$dummy = true;
 	}
-	
+
 	if($dummy==true) {
 		array_push($teamList, "dummy");
-		
+
 	}
-	
+
 }
 
 $totalRounds = $teams - 1;
@@ -49,16 +49,16 @@ for ($round = 0; $round < $totalRounds; $round++) {
 		if ($team1 < 1) {
 			$team1 = ($totalRounds + $team1);
 		}
-		
+
 		$team2 = $totalRounds - ($round + $game);
 		if ($team2 < 1) {
 			$team2 = ($totalRounds + $team2);
 		}
-		
+
 		if ($game == 0) {
 			$team1 = 0;
 		}
-		
+
 		$fixtures[$round][$game] = array($team1, $team2);
 	}
 }

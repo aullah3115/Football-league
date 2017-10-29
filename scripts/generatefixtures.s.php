@@ -11,57 +11,96 @@ if(!isset($_POST['submit'])) {
 //find out number of teams in league
 
 if (!isset($_SESSION['league_id'])){
-  $link = 'Location: ../dashboard.php?' . $_SESSION['league_id'];
-  header($link);
+  header('Location: ../dashboard.php?status=league_not_selected');
   exit();
 }
-
+$no_of_teams = (int)$_SESSION['no_of_teams'];
 $league_id = $_SESSION['league_id'];
 
-$query = "SELECT league_dummy FROM leagues WHERE league_id='". $league_id ."';";
+$query = "UPDATE teams SET status='' WHERE status='added' AND league_id =". $_SESSION['league_id'] .";";
+$conn->query($query);
+
+$query = "DELETE FROM teams where status='deleted' AND league_id =". $_SESSION['league_id'] . ";";
+$conn->query($query);
+
+
+$query = "DELETE FROM matches WHERE EXISTS (SELECT * FROM teams WHERE teams.league_id = ".$league_id." AND matches.team1_id = teams.team_id)";
+$result4 = $conn->query($query);
+
+if ($no_of_teams % 2 == 0){
+  $totalRounds = $no_of_teams - 1;
+  $matchesPerRound = $no_of_teams / 2;
+} else {
+  $totalRounds = $no_of_teams;
+  $matchesPerRound = ($no_of_teams + 1) / 2;
+}
+
+$query = "SELECT * FROM leagues WHERE league_id='". $league_id ."';";
 $result = $conn->query($query);
 $row = $result->fetch_assoc();
 $dummy = $row['league_dummy'];
+$weeks = (int)$row['league_weeks'];
+$rounds =(int)$row['league_rounds'];
 
 // get team ids and store in array
-$teams = array();
+$teamList = array();
 
 $query = "SELECT team_id FROM teams WHERE league_id = '". $league_id ."';";
 $result = $conn->query($query);
 
 while($row = $result->fetch_assoc()){
-  $teams[] = $row['team_id'];
+  $teamList[] = $row['team_id'];
 }
 
 if($dummy==1){
-  $teams[] = "dummy";
+  $teamList[] = "dummy";
 }
+
+
+
 
 //generate fixtures
 
-// store fixtures in matches table
+for ($y = 0; $y < $weeks; $y++){
 
-// go to next stage
+  for($x = 0; $x < $rounds; $x++){
 
-//(header 'Location: ../leaguedashboard.php')
+    for ($round = 0; $round < $totalRounds; $round++) {
+
+	     for ($game = 0; $game < $matchesPerRound; $game++) {
+		       $team1 = ($game - $round);
+		        if ($team1 < 1) {
+			           $team1 = ($totalRounds + $team1);
+		        }
+
+		        $team2 = $totalRounds - ($round + $game);
+		          if ($team2 < 1) {
+			             $team2 = ($totalRounds + $team2);
+		          }
+
+		            if ($game == 0) {
+			               $team1 = 0;
+		            }
+
+
+                if($teamList[$team1] == 'dummy' || $teamList[$team2] == 'dummy' ) {
+                  continue;
+                } else {
+
+                  $query = "INSERT INTO matches (team1_id, team2_id, week_no, round_no)
+                  VALUES ('". $teamList[$team1] ."', '". $teamList[$team2] ."', '". ($y+1) ."', '". ($x+1) ."');";
+
+                  $conn->query($query);
+                }
+
+	             }
+             }
+           }
+}
+
+
+
+header('Location: ../leaguedashboard.php');
+exit();
 
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
-  <?php
-  //echo $no_of_teams . '<br/>';
-  //echo $num_of_rows . '<br/>';
-  echo $dummy;
-  echo '<li>';
-  foreach($teams as $team){
-    echo '<ul>' . $team . '</ul>';
-  }
-  echo '</li>';
-  ?>
-</body>
-</html>
